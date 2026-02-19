@@ -1,0 +1,11 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    tmpDir: tmp/phpstan
+    ignoreErrors:
+        # ResourceHelperTrait is defined in parser-core but used by downstream packages
+        # (parser-rdf, parser-owl, parser-shacl). PHPStan cannot analyze unused traits.
+        -
+            identifier: trait.unused
+            path: src/Traits/ResourceHelperTrait.php

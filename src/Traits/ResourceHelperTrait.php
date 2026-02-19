@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Services\Ontology\Parsers\Traits;
+declare(strict_types=1);
 
+namespace Youri\vandenBogert\Software\ParserCore\Traits;
+
+use EasyRdf\Literal;
 use EasyRdf\Resource;
 
 /**
@@ -41,6 +44,8 @@ trait ResourceHelperTrait
      * Get all labels for a resource with language tags.
      * Only extracts rdfs:label - all other label properties (skos:prefLabel, dc:title, etc.)
      * should be preserved as custom annotations.
+     *
+     * @return array<string, string>
      */
     protected function getAllResourceLabels(Resource $resource): array
     {
@@ -84,6 +89,8 @@ trait ResourceHelperTrait
      * Get all comments/descriptions for a resource with language tags.
      * Only extracts rdfs:comment - all other description properties (skos:definition,
      * skos:note, dc:description, etc.) should be preserved as custom annotations.
+     *
+     * @return array<string, string>
      */
     protected function getAllResourceComments(Resource $resource): array
     {
@@ -102,6 +109,8 @@ trait ResourceHelperTrait
      * Extract custom annotations from a resource.
      * Returns all properties that are NOT in the standard RDFS/OWL properties list.
      * Standard properties are those explicitly handled by the system and mapped to database fields.
+     *
+     * @return array<int, array{property: string, value: string, language?: string}>
      */
     protected function extractCustomAnnotations(Resource $resource): array
     {
@@ -148,7 +157,7 @@ trait ResourceHelperTrait
                 ];
 
                 // Check if it's a literal with language
-                if ($value instanceof \EasyRdf\Literal) {
+                if ($value instanceof Literal) {
                     $annotation['value'] = $value->getValue();
                     if ($lang = $value->getLang()) {
                         $annotation['language'] = $lang;
@@ -189,6 +198,8 @@ trait ResourceHelperTrait
 
     /**
      * Get a single value from a resource property.
+     *
+     * @return mixed
      */
     protected function getResourceValue(Resource $resource, string $property): mixed
     {
@@ -207,6 +218,8 @@ trait ResourceHelperTrait
 
     /**
      * Get all values from a resource property.
+     *
+     * @return array<string>
      */
     protected function getResourceValues(Resource $resource, string $property): array
     {
@@ -217,6 +230,24 @@ trait ResourceHelperTrait
                 $values[] = $value->getUri();
             } else {
                 $values[] = (string) $value;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * Get all named (non-blank-node) URI values from a resource property.
+     *
+     * @return array<string>
+     */
+    protected function getNamedResourceValues(Resource $resource, string $property): array
+    {
+        $values = [];
+
+        foreach ($resource->all($property) as $value) {
+            if ($value instanceof Resource && $value->getUri() && ! $value->isBNode()) {
+                $values[] = $value->getUri();
             }
         }
 
@@ -292,6 +323,8 @@ trait ResourceHelperTrait
 
     /**
      * Extract members from an owl:unionOf list.
+     *
+     * @return array<string>
      */
     protected function extractUnionMembers(Resource $resource): array
     {
@@ -304,7 +337,7 @@ trait ResourceHelperTrait
 
         // Traverse RDF list
         $current = $unionOf;
-        while ($current && ! $current->getUri() === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') {
+        while ($current && $current->getUri() !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') {
             $first = $current->get('rdf:first');
             if ($first && ! $this->isBlankNode($first)) {
                 $members[] = $first->getUri();
@@ -325,7 +358,12 @@ trait ResourceHelperTrait
             return substr($uri, strrpos($uri, '#') + 1);
         }
 
-        return substr($uri, strrpos($uri, '/') + 1);
+        $pos = strrpos($uri, '/');
+        if ($pos === false) {
+            return $uri;
+        }
+
+        return substr($uri, $pos + 1);
     }
 
     /**
@@ -337,6 +375,11 @@ trait ResourceHelperTrait
             return substr($uri, 0, strrpos($uri, '#') + 1);
         }
 
-        return substr($uri, 0, strrpos($uri, '/') + 1);
+        $pos = strrpos($uri, '/');
+        if ($pos === false) {
+            return '';
+        }
+
+        return substr($uri, 0, $pos + 1);
     }
 }

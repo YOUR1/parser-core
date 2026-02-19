@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Services\Ontology\Exceptions\OntologyImportException;
-use App\Support\RdfHelper;
+use Youri\vandenBogert\Software\ParserCore\Support\RdfHelper;
 
 it('can instantiate core exception', function () {
     $ex = new OntologyImportException('x');

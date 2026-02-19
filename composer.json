@@ -1,38 +1,43 @@
 {
-  "name": "youri/parser-core",
-  "description": "Core parser interfaces, exceptions, traits, and RDF helpers.",
-  "type": "library",
-  "license": "proprietary",
-  "authors": [
-    {
-      "name": "Youri van den Bogert"
+    "name": "youri/parser-core",
+    "description": "Core parser interfaces, exceptions, traits, and RDF helpers.",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Youri van den Bogert"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "easyrdf/easyrdf": "^1.1"
+    },
+    "require-dev": {
+        "illuminate/support": "^12.0",
+        "pestphp/pest": "^3.8",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Youri\\vandenBogert\\Software\\ParserCore\\": "src/"
+        },
+        "files": [
+            "aliases.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest --colors=always --coverage-clover=coverage.xml",
+        "analyse": "vendor/bin/phpstan analyse --no-progress"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
-  ],
-  "require": {
-    "php": "^8.2",
-    "easyrdf/easyrdf": "^1.1"
-  },
-  "require-dev": {
-    "pestphp/pest": "^3.8",
-    "illuminate/support": "^12.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "test": "vendor/bin/pest --colors=always --coverage-clover=coverage.xml"
-  },
-  "config": {
-    "sort-packages": true,
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
-    }
-  }
 }
