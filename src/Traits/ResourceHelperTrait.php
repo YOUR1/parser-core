@@ -129,8 +129,6 @@ trait ResourceHelperTrait
             'http://www.w3.org/2002/07/owl#equivalentProperty',
             'http://www.w3.org/2002/07/owl#inverseOf',
             'http://www.w3.org/2002/07/owl#deprecated',
-            'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-            'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
         ];
 
         $annotations = [];
