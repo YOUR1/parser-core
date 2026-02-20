@@ -19,6 +19,7 @@ final class ParsedOntology
      * @param array<string, array<string, mixed>> $shapes
      * @param array<string, array<string, mixed>> $restrictions
      * @param array<string, mixed> $metadata
+     * @param array<string, ParsedRdf> $graphs Named graphs keyed by graph URI; '_:default' for the default graph
      */
     public function __construct(
         public readonly array $classes = [],
@@ -28,5 +29,6 @@ final class ParsedOntology
         public readonly array $restrictions = [],
         public readonly array $metadata = [],
         public readonly string $rawContent = '',
+        public readonly array $graphs = [],
     ) {}
 }
