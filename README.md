@@ -1,5 +1,8 @@
 # parser-core
 
+[![CI](https://github.com/YOUR1/parser-core/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR1/parser-core/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/YOUR1/parser-core/branch/main/graph/badge.svg)](https://codecov.io/gh/YOUR1/parser-core)
+
 Core parser interfaces, exceptions, traits, and RDF helpers.
 
 ## License
